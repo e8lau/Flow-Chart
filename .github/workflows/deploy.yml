@@ -1,3 +1,4 @@
+# .github/workflows/deploy.yml
 name: Deploy Astro to GitHub Pages
 
 on:
@@ -11,18 +12,16 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
@@ -42,26 +41,24 @@ jobs:
 
       - name: Build (Astro)
         env:
-          # Optional base path for project pages like https://user.github.io/<repo>/
-          # Set repo Action Variable BASE_PATH to "/<repo>/" if needed.
+          # For project pages (https://user.github.io/<repo>/), set repo Action Variable BASE_PATH="/<repo>/"
           BASE: ${{ vars.BASE_PATH }}
         run: |
           echo "BASE='$BASE'"
           npm run build
-          # Prevent any Jekyll processing on the published artifact, just in case
-          touch dist/.nojekyll
+          touch dist/.nojekyll  # extra insurance: disable Jekyll on the artifact
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: dist
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

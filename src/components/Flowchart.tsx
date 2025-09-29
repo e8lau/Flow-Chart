@@ -6,16 +6,15 @@ import "reactflow/dist/style.css";
 import Papa from "papaparse";
 import dagre from "dagre";
 
-/** ---------- Tunables ---------- */
-const NODE_W = 320;          // approximate card width for layout
-const NODE_H = 130;          // approximate card height for layout
-const RANK_SEP = 200;        // horizontal gap between dependency layers (LR)
-const NODE_SEP = 80;         // vertical gap between siblings
-const EDGE_SEP = 20;         // extra spacing for edges
+/** ---------- Layout tunables ---------- */
+const NODE_W = 320;
+const NODE_H = 130;
+const RANK_SEP = 200;   // horizontal gap between dependency layers (LR)
+const NODE_SEP = 80;    // vertical gap between siblings
+const EDGE_SEP = 20;
 
 const STAGE_ORDER = ["Setup", "Start", "Early", "Late"];
 
-/** ---------- Types ---------- */
 type Row = {
     id: string;
     title: string;
@@ -25,16 +24,25 @@ type Row = {
     priority?: string | number;
     depends_on?: string;  // pipe-delimited
     status?: "todo" | "done" | string;
-    tags?: string;
+    tags?: string;        // pipe-delimited
 };
 
 const localKey = (csvUrl: string) => `stellaris-flow-status:${csvUrl}`;
+const ci = (s?: string) => (s || "").toLowerCase();
+const list = (s?: string) =>
+    (s || "").split("|").map(t => t.trim()).filter(Boolean);
 
 export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.csv" }: { csvUrl?: string }) {
     const [rawRows, setRawRows] = useState<Row[]>([]);
+    const [layoutDir, setLayoutDir] = useState<"LR" | "TB">("LR"); // Horizontal default
     const [onlyNextActionable, setOnlyNextActionable] = useState(false);
-    const [filterStage, setFilterStage] = useState<string>("All");
-    const [layoutDir, setLayoutDir] = useState<"LR" | "TB">("LR"); // horizontal default
+
+    // NEW: search + filters
+    const [query, setQuery] = useState("");
+    const [statusFilter, setStatusFilter] = useState<"all" | "todo" | "done">("all");
+    const [selectedStages, setSelectedStages] = useState<string[]>([...STAGE_ORDER]);
+    const [selectedSections, setSelectedSections] = useState<string[]>([]);
+    const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -68,41 +76,80 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         localStorage.setItem(localKey(csvUrl), JSON.stringify(map));
     }, [rawRows, csvUrl]);
 
+    // Unique sections & tags (for filter chips)
+    const allSections = useMemo(() => {
+        const s = Array.from(new Set(rawRows.map(r => r.section || "General"))).sort();
+        return s;
+    }, [rawRows]);
+
+    const allTags = useMemo(() => {
+        const tags = new Set<string>();
+        rawRows.forEach(r => list(r.tags).forEach(t => tags.add(t)));
+        return Array.from(tags).sort();
+    }, [rawRows]);
+
+    // Default sections to "all" once data loads
+    useEffect(() => {
+        if (rawRows.length && selectedSections.length === 0) {
+            setSelectedSections(allSections);
+        }
+    }, [rawRows, allSections, selectedSections.length]);
+
+    // Helpers to toggle chip selections
+    const toggle = (arr: string[], value: string, onChange: (v: string[]) => void) => {
+        onChange(arr.includes(value) ? arr.filter(x => x !== value) : [...arr, value]);
+    };
+
+    /** Build graph with filters applied */
     const buildGraph = useMemo(() => {
-        const depsOf = (r: Row) =>
-            (r.depends_on || "")
-                .split("|")
-                .map(s => s.trim())
-                .filter(Boolean);
+        const byId = new Map(rawRows.map(r => [r.id, r]));
+        const depsOf = (r: Row) => list(r.depends_on);
 
         const completed = new Set(rawRows.filter(r => r.status === "done").map(r => r.id));
-
-        // Actionable = todo and all deps satisfied
         const actionable = new Set(
             rawRows
                 .filter(r => (r.status !== "done") && depsOf(r).every(d => completed.has(d)))
                 .map(r => r.id)
         );
 
-        // Stage filter
-        const visibleRows = rawRows.filter(r =>
-            (filterStage === "All" || r.stage === filterStage) &&
-            (!onlyNextActionable || actionable.has(r.id))
+        const q = ci(query);
+
+        const okStatus = (r: Row) =>
+            statusFilter === "all" ? true :
+                statusFilter === "todo" ? r.status !== "done" :
+                    r.status === "done";
+
+        const okStage = (r: Row) => selectedStages.includes(r.stage || "");
+        const okSection = (r: Row) => selectedSections.includes(r.section || "General");
+        const okTags = (r: Row) => {
+            if (!selectedTags.length) return true;
+            const tags = list(r.tags);
+            return tags.some(t => selectedTags.includes(t));
+        };
+        const okSearch = (r: Row) => {
+            if (!q) return true;
+            const hay = [r.title, r.description, r.section, r.stage, r.tags].map(ci).join(" ");
+            return hay.includes(q);
+        };
+
+        // Apply all filters
+        let visibleRows = rawRows.filter(r =>
+            okStatus(r) && okStage(r) && okSection(r) && okTags(r) && okSearch(r)
         );
 
-        // Build edges from deps (only if both ends visible)
+        if (onlyNextActionable) {
+            visibleRows = visibleRows.filter(r => actionable.has(r.id));
+        }
+
+        // Build edges only when both ends visible
         const visibleIds = new Set(visibleRows.map(r => r.id));
         const edgesBuilt = visibleRows.flatMap(r =>
             depsOf(r)
                 .filter(dep => visibleIds.has(dep))
-                .map(dep => ({
-                    id: `${dep}->${r.id}`,
-                    source: dep,
-                    target: r.id,
-                }))
+                .map(dep => ({ id: `${dep}->${r.id}`, source: dep, target: r.id }))
         );
 
-        // Initial nodes (positions filled after layout)
+        // Initial nodes (positions added after DAG layout)
         const nodesBuilt = visibleRows.map((r) => ({
             id: r.id,
             position: { x: 0, y: 0 },
@@ -147,17 +194,16 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         }));
 
         return { nodesBuilt, edgesBuilt };
-    }, [rawRows, onlyNextActionable, filterStage]);
+    }, [rawRows, query, statusFilter, selectedStages, selectedSections, selectedTags, onlyNextActionable]);
 
-    // Apply Dagre layout whenever graph or orientation changes
+    // Apply Dagre layout when graph or orientation changes
     useEffect(() => {
         const { nodesBuilt, edgesBuilt } = buildGraph;
-
-        // Configure dagre
         const isHorizontal = layoutDir === "LR";
+
         const g = new dagre.graphlib.Graph();
         g.setGraph({
-            rankdir: layoutDir, // "LR" horizontal, "TB" vertical
+            rankdir: layoutDir,      // "LR" horizontal, "TB" vertical
             ranksep: RANK_SEP,
             nodesep: NODE_SEP,
             edgesep: EDGE_SEP,
@@ -166,17 +212,10 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         });
         g.setDefaultEdgeLabel(() => ({}));
 
-        // Add nodes with sizes
-        nodesBuilt.forEach(n => {
-            g.setNode(n.id, { width: NODE_W, height: NODE_H });
-        });
-
-        // Add edges
+        nodesBuilt.forEach(n => g.setNode(n.id, { width: NODE_W, height: NODE_H }));
         edgesBuilt.forEach(e => g.setEdge(e.source, e.target));
-
         dagre.layout(g);
 
-        // Map dagre positions back to React Flow nodes/edges
         const laidOutNodes = nodesBuilt.map(n => {
             const { x, y } = g.node(n.id);
             return {
@@ -197,35 +236,107 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         setEdges(laidOutEdges);
     }, [buildGraph, layoutDir, setNodes, setEdges]);
 
+    const allStages = STAGE_ORDER;
+
     return (
-        <div style={{ height: "80vh", width: "100%", display: "grid", gridTemplateRows: "auto 1fr", gap: 12 }}>
-            {/* Controls */}
+        <div style={{ height: "80vh", width: "100%", display: "grid", gridTemplateRows: "auto auto 1fr", gap: 10 }}>
+            {/* === FILTER BAR === */}
             <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
-                <strong>Flow:</strong>
-                <select value={filterStage} onChange={e => setFilterStage(e.target.value)}>
-                    {["All", ...STAGE_ORDER].map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-                <label style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
-                    <input type="checkbox" checked={onlyNextActionable} onChange={e => setOnlyNextActionable(e.target.checked)} />
-                    Only next actionable
+                <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search title/description/section/tags…"
+                    style={{ padding: "8px 10px", borderRadius: 10, border: "1px solid #ddd", minWidth: 280 }}
+                />
+
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    Status:
+                    <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value as any)}>
+                        <option value="all">All</option>
+                        <option value="todo">To-do</option>
+                        <option value="done">Done</option>
+                    </select>
                 </label>
 
-                <span style={{ marginLeft: 16 }}>Layout:</span>
+                <label style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                    Only next actionable
+                    <input type="checkbox" checked={onlyNextActionable} onChange={(e) => setOnlyNextActionable(e.target.checked)} />
+                </label>
+
+                <span style={{ marginLeft: "auto" }}>Layout:</span>
                 <select value={layoutDir} onChange={(e) => setLayoutDir(e.target.value as "LR" | "TB")}>
-                    <option value="LR">Horizontal (left → right)</option>
-                    <option value="TB">Vertical (top → bottom)</option>
+                    <option value="LR">Horizontal</option>
+                    <option value="TB">Vertical</option>
                 </select>
 
-                <a
-                    href={csvUrl}
-                    download
-                    style={{ marginLeft: "auto", fontSize: 12, textDecoration: "underline" }}
-                    title="Download current CSV (original file)">
-                    Download CSV
-                </a>
+                <a href={csvUrl} download style={{ fontSize: 12, textDecoration: "underline" }}>Download CSV</a>
             </div>
 
-            {/* Canvas */}
+            {/* === CHIP FILTERS === */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                {/* Stages */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <strong>Stage:</strong>
+                    {allStages.map(s => (
+                        <label key={s} style={chipStyle(selectedStages.includes(s))}>
+                            <input
+                                type="checkbox"
+                                checked={selectedStages.includes(s)}
+                                onChange={() => toggle(selectedStages, s, setSelectedStages)}
+                                style={{ marginRight: 6 }}
+                            />
+                            {s}
+                        </label>
+                    ))}
+                </div>
+
+                {/* Sections */}
+                <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <strong>Section:</strong>
+                    <button
+                        type="button"
+                        onClick={() => setSelectedSections(allSections)}
+                        style={miniBtn}
+                        title="Select all"
+                    >All</button>
+                    <button
+                        type="button"
+                        onClick={() => setSelectedSections([])}
+                        style={miniBtn}
+                        title="Clear"
+                    >None</button>
+                    {allSections.map(sec => (
+                        <label key={sec} style={chipStyle(selectedSections.includes(sec))}>
+                            <input
+                                type="checkbox"
+                                checked={selectedSections.includes(sec)}
+                                onChange={() => toggle(selectedSections, sec, setSelectedSections)}
+                                style={{ marginRight: 6 }}
+                            />
+                            {sec}
+                        </label>
+                    ))}
+                </div>
+
+                {/* Tags */}
+                <div style={{ gridColumn: "1 / -1", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <strong>Tags:</strong>
+                    <button type="button" onClick={() => setSelectedTags([])} style={miniBtn}>Clear</button>
+                    {allTags.map(tag => (
+                        <label key={tag} style={chipStyle(selectedTags.includes(tag))}>
+                            <input
+                                type="checkbox"
+                                checked={selectedTags.includes(tag)}
+                                onChange={() => toggle(selectedTags, tag, setSelectedTags)}
+                                style={{ marginRight: 6 }}
+                            />
+                            {tag}
+                        </label>
+                    ))}
+                </div>
+            </div>
+
+            {/* === CANVAS === */}
             <div style={{ border: "1px solid #eee", borderRadius: 12, overflow: "hidden" }}>
                 <ReactFlow
                     nodes={nodes}
@@ -243,3 +354,23 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         </div>
     );
 }
+
+/** tiny styles */
+const chipStyle = (active: boolean): React.CSSProperties => ({
+    display: "inline-flex",
+    alignItems: "center",
+    padding: "6px 10px",
+    borderRadius: 999,
+    border: "1px solid #ddd",
+    background: active ? "rgba(0,0,0,.06)" : "white",
+    cursor: "pointer",
+    fontSize: 12
+});
+const miniBtn: React.CSSProperties = {
+    fontSize: 12,
+    padding: "4px 8px",
+    border: "1px solid #ddd",
+    borderRadius: 8,
+    background: "white",
+    cursor: "pointer"
+};
