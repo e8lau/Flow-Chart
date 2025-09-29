@@ -1,0 +1,53 @@
+---
+import Flowchart from "../components/Flowchart.tsx";
+
+// Put the CSV you downloaded into `public/stellaris_synth_fertility_flow.csv`
+// or pass a full path to csvUrl prop below.
+const csvUrl = "/stellaris_synth_fertility_flow.csv";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Stellaris Build Flow</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <style is:global>
+            :root {
+                color-scheme: dark light;
+            }
+            body {
+                font-family:
+                    ui-sans-serif,
+                    system-ui,
+                    -apple-system,
+                    Segoe UI,
+                    Roboto,
+                    Arial,
+                    sans-serif;
+                margin: 0;
+            }
+            .stage-setup {
+                --border: #a3bffa;
+            }
+            .stage-start {
+                --border: #9ae6b4;
+            }
+            .stage-early {
+                --border: #fbd38d;
+            }
+            .stage-late {
+                --border: #fbb6ce;
+            }
+        </style>
+    </head>
+    <body>
+        <main style="padding: 16px; max-width: 1200px; margin: 0 auto;">
+            <h1 style="margin: 0 0 12px 0;">Stellaris Build Flow</h1>
+            <p style="margin: 0 0 18px 0; opacity:.8">
+                Import your CSV and track progress. Toggle “Only next
+                actionable” to focus on what’s truly unblocked.
+            </p>
+            <Flowchart csvUrl={csvUrl} client:load />
+        </main>
+    </body>
+</html>
