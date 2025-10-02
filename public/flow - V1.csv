@@ -1,0 +1,85 @@
+id,depends_on,title,section,stage,description,priority,status,tags
+COU-010,,Agenda: Evolving Society,Council,Start,Unity boost agenda.,2,todo,unity
+COU-020,,Council Positions,Council,Early,"Appoint CEO, Research, State, Defense.",2,todo,leadership
+ECO-010,,Buy Minerals,Economy,Start,Early expansion bottleneck fix.,2,todo,economy
+ECO-020,,Build Hydro Bay on Starbase,Economy,Start,Provides food supply.,2,todo,economy
+ECO-030,,Sell Food,Economy,Start,Trade food surplus for energy.,2,todo,economy
+ECO-040,,Aggressive Mineral Buys,Economy,Early,Fuel for robot colonies & research expansions.,2,todo,economy
+EVT-010,,Habitable World Survey (Unity),Event,Start,Take unity reward for faster traditions.,2,todo,unity
+EVT-020,THR-010,Synthetic Fertility: Improve Durability,Event,Early,Pop upkeep reduction.,2,todo,economy
+EVT-030,EVT-020,Synthetic Fertility: Stronger Together,Event,Early,Pop restoration event.,2,todo,pop-growth
+EVT-040,EVT-030,Synthetic Fertility: Nature Got It Right,Event,Early,"Identity initiation tech option, saved for Midr.",3,todo,research
+EVT-050,,Synthetization: Full Speed,Event,Early,"Ignore alloys, maximize synthetic growth.",2,todo,research
+EVT-060,,Digital Refactoring: All Virtual,Event,Early,"Take all virtual options, unlock Computation Core/Virtual Leaders.",1,todo,"research, pop-growth"
+EXP-010,,Sol Exploration Route,Exploration,Start,Explore Alpha Centauri ? Barnard ? Sirius to secure neighbors and deposits.,2,todo,exploration
+EXP-020,,Arc Furnace Deposits,Exploration,Start,Mineral reserves noted for Midr bottleneck relief.,2,todo,economy
+GOV-001,,Parliamentary Democracy,Government,Setup,Unity boost from factions. Critical for tradition funnel.,1,todo,"unity, sprawl"
+GOV-005,SPC-040,Sovereign Guardianship,Government,Setup,Reduces empire size from pops (requires Militarist ethic).,2,todo,sprawl
+GOV-010,,Swap to Megacorp,Government,Early,Triggered after Synthetic Fertility. Enables trade snowball.,1,todo,economy
+GOV-020,,Corporate Hedonism,Government,Early,Creates Hedonist role (unity + pop growth).,1,todo,"unity, pop-growth"
+GOV-030,,Mastercraft Inc.,Government,Early,Consumer goods & trade from artificers.,2,todo,economy
+PERK-010,TRD-010,Tech First,Ascension Perk,Start,Pushes Synthetic techs faster.,1,todo,research
+PERK-020,TRD-040,One Vision,Ascension Perk,Early,Unity scaling.,2,todo,unity
+PERK-030,TRD-050|RES-080,Arcology Project,Ascension Perk,Early,Pre-requisite for Ecumenopolis construction.,,todo,economy
+PERK-040,TRD-060,Cosmo Genesis,Ascension Perk,Early,Fallen empire building upgrades ? more pop growth.,1,todo,pop-growth
+PERK-050,TRD-070,Universal Transactions,Ascension Perk,Early,Megacorp trade synergy.,1,todo,economy
+PERK-060,TRD-080,Mastery of Nature,Ascension Perk,Mid,Extra districts ? more housing ? more pops.,2,todo,pop-growth
+PMG-005,,Arctic World Start,Planet Mgmt,Setup,"Mineral bias world start, helps with early bottleneck.",2,todo,economy
+PMG-010,,Delete Stronghold,Planet Mgmt,Start,"Frees pops for civilian jobs (unity, research, energy).",1,todo,"unity, research, economy"
+PMG-020,,Build Monument (first),Planet Mgmt,Start,Priority unity scaling from civilian jobs.,1,todo,unity
+PMG-030,,Switch Archives to Engineering,Planet Mgmt,Start,Specialize research to engineering.,1,todo,research
+PMG-040,,Build 1 of Each Research Lab,Planet Mgmt,Start,Expands science jobs across categories.,2,todo,research
+PMG-050,,Add Housing,Planet Mgmt,Start,Expands civilian job capacity for unity/research.,2,todo,"unity, research"
+PMG-060,,Build Trade Starbases,Planet Mgmt,Start,Early trade ? energy scaling.,2,todo,economy
+PMG-065,,Colonize Planets w/ Robots Only,Planet Mgmt,Start,Use mineral/alloy colonies once robot pops available.,2,todo,pop-growth
+PMG-070,,Move Capital to Research Enclave,Planet Mgmt,Early,Transition homeworld to research specialization.,1,todo,research
+PMG-080,,Civilian Economy Switch (if needed),Planet Mgmt,Early,Policy swap to address CG deficits.,2,todo,economy
+PMG-110,,Ecumenopolis Arcologies,Planet Mgmt,Mid,Convert to commercial arcologies for max assembly.,1,todo,pop-growth
+POL-010,,Diplomatic Stance: Isolationist,Policy,Start,Unity generation from inward focus.,1,todo,unity
+POL-020,,Inner Focus (after chokepoints),Policy,Start,Unity boost early on.,2,todo,unity
+POL-030,,Research Focus: Rapid Identity Preservation,Policy,Start,Boost engineering speed.,2,todo,research
+POL-040,,First Contact: Proactive,Policy,Start,Helps discover empires quickly.,2,todo,exploration
+POL-050,,Optimize Identity Creation,Policy,Early,Maximize pop assembly.,1,todo,pop-growth
+POL-060,,Diplomatic Stance: Mercantile,Policy,Early,10% Trade Boost and increased diplomatic weight from economy,2,todo,economy
+POL-070,,Trade Policy: Marketplace of Ideas,Policy,Early,Switch from energy to unity once stable.,2,todo,"unity, economy"
+POL-080,,Remove Inner Focus,Policy,Early,Opens room for trade pacts.,2,todo,diplomacy
+POL-090,,Identity Copies (Mid),Policy,Mid,Use identity initialization for resource/happiness.,2,todo,pop-growth
+POL-100,,Ambition: Scientific Revolution,Policy,Mid,Research scaling ambition.,1,todo,research
+RES-010,POL-030|SPC-010|SPC-050|SPC-040,Engineering Tech Rush,Research,Start,Prioritize guaranteed engineering techs to reach Synthetic Fertility ASAP.,1,todo,research
+RES-020,,Materials Workshop (if rolled),Research,Start,Strong early option for engineering scaling.,2,todo,research
+RES-030,,Rapid Identity Preservation,Research,Start,Policy choice to bias engineering research.,2,todo,research
+RES-050,,Machine TempMid System,Research,Early,Unlocks robot trait customization.,2,todo,pop-growth
+RES-060,,Build Identity Complex,Research,Early,"After specialization shift, boosts unity and pop assembly scaling.",2,todo,"unity, pop-growth"
+RES-070,,Wealth Control System (Tier 1),Research,Early,Prereq for Anti-Gravity ? Ecumenopolis.,2,todo,economy
+RES-080,RES-070,"Wealth Control System (Tier 2, Anti-Gravity)",Research,Early,Key unlock for Ecumenopolis Ascension Perk.,1,todo,"research, pop-growth"
+RES-090,,Psionic Theory (admin modifier),Research,Early,Reduces empire size from pops.,2,todo,sprawl
+RES-100,,Assembly Complexes,Research,Early,Increases pop build speed.,1,todo,pop-growth
+RES-110,,Orbital Rings (optional),Research,Early,"District pressure relief, not core.",3,todo,economy
+RES-120,,Robot Manufacturing Nexus,Research,Mid,High-tier assembly building if needed.,2,todo,pop-growth
+RES-130,,Living Metals,Research,Mid,Strategic resource for research bonuses.,2,todo,research
+SPC-010,,Intelligence,Species,Setup,"10% research efficiency.
+Core for Synthetic Fertility rush.",1,todo,research
+SPC-050,,Natural Engineers,Species,Setup,"15% engineering research efficiency.
+Core for Synthetic Fertility rush.",,todo,research
+SPC-020,,Ingenious,Species,Setup,"15% energy job efficiency.
+Provides energy buffer to handle crash as organics decline.",2,todo,economy
+SPC-030,,Unruly,Species,Setup,"Free negative trait, negligible effect.",3,todo,none
+SPC-040,,Fanatic Materialist,Ethics,Setup,Research boost and reduced robot upkeep.,1,todo,"research, robots"
+SPC-110,,Adaptive Frames,Species Mod,Early,Premium robot traits.,2,todo,pop-growth
+SPC-120,,Mass Produced,Species Mod,Early,Faster assembly.,1,todo,pop-growth
+SPC-130,,Subspecies Integration,Species Mod,Early,Gradual integration.,2,todo,pop-growth
+SPC-140,,Decadent Lifestyles,Species Mod,Early,Living standards ? growth + unity.,2,todo,"unity, pop-growth"
+THR-010,RES-010,Achieved Synthetic Fertility,Milestone,Early,Synthetic Fertility tech researched; unlocks synthetics and early pop assembly. Enables Megacorp swap.,1,todo,"research, pop-growth"
+THR-020,,Government Pivot to Megacorp,Milestone,Early,Switch to Megacorp government after Synthetic Fertility. Trade becomes primary economic engine.,1,todo,"economy, unity"
+THR-030,,Anti-Gravity Engineering (Ecumenopolis),Milestone,Mid,Research line finished to unlock Ecumenopolis. Enables late-game pop funnel.,1,todo,"research, pop-growth"
+THR-040,,Consumer Goods Stabilized,Milestone,Mid,CG economy balanced via trade + Mastercraft. Civilians can remain “virtual” (unity/research).,1,todo,"economy, research"
+THR-050,,Ecumenopolis Completed,Milestone,Late,Capital transformed into Ecumenopolis. Enables arcologies + stacking of FE assembly buildings.,1,todo,"pop-growth, research"
+THR-060,,Research Snowball Established,Milestone,Late,"All assembly funneled into capital, unity and trade stabilized. Tech output scales quadratically.",1,todo,research
+TRD-010,,Open Mercantile Tree,Tradition,Start,Early economic & trade scaling.,1,todo,economy
+TRD-020,TRD-010,Trickle-Up Economics,Tradition,Start,Civilians ? trade ? economy + unity.,1,todo,"economy, unity"
+TRD-030,TRD-020,Marketplace of Ideas,Tradition,Start,Unlocks unity trade conversion (defer switch).,2,todo,unity
+TRD-040,TRD-010|TRD-030,Prosperity Tree,Tradition,Early,Efficiency & economy stability.,2,todo,economy
+TRD-050,TRD-040,Statecraft Tree,Tradition,Early,Admin capacity and sprawl management.,2,todo,sprawl
+TRD-060,TRD-050,Discovery Tree,Tradition,Early,Reduces researcher upkeep.,2,todo,research
+TRD-070,TRD-060,Harmony Tree,Tradition,Early,Reduces empire size from pops.,2,todo,sprawl
+TRD-080,TRD-070,Domination Tree,Tradition,Mid,Mid-game sprawl reduction.,2,todo,sprawl

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import ReactFlow, {
     Background, Controls, MiniMap, useNodesState, useEdgesState, Position
 } from "reactflow";
-import type { ReactFlowInstance } from "reactflow";
+import type { ReactFlowInstance, Viewport } from "reactflow";
 import "reactflow/dist/style.css";
 import Papa from "papaparse";
 import dagre from "dagre";
@@ -14,13 +14,13 @@ const RANK_SEP = 200;   // horizontal gap between dependency layers (LR)
 const NODE_SEP = 80;    // vertical gap between siblings
 const EDGE_SEP = 20;
 
-const STAGE_ORDER = ["Setup", "Start", "Early", "Late"];
+const STAGE_ORDER = ["Setup", "Start", "Early", "Mid", "Late"];
 
 type Row = {
     id: string;
     title: string;
     section?: string;
-    stage?: "Setup" | "Start" | "Early" | "Late" | string;
+    stage?: "Setup" | "Start" | "Early" | "Mid" | "Late" | string;
     description?: string;
     priority?: string | number;
     depends_on?: string;  // pipe-delimited
@@ -47,10 +47,11 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    // --- fullscreen ---
+    // --- fullscreen + viewport persistence ---
     const containerRef = useRef<HTMLDivElement>(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
     const rfInstanceRef = useRef<ReactFlowInstance | null>(null);
+    const lastViewportRef = useRef<Viewport | null>(null);
 
     const requestFs = async () => {
         const el = containerRef.current;
@@ -67,8 +68,14 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         const onFsChange = () => {
             const active = !!document.fullscreenElement && document.fullscreenElement === containerRef.current;
             setIsFullscreen(active);
-            // Give the browser a tick to resize, then refit
-            setTimeout(() => rfInstanceRef.current?.fitView({ padding: 0.2 }), 80);
+            // After size change, restore last viewport if we have one; otherwise fit.
+            setTimeout(() => {
+                if (lastViewportRef.current) {
+                    rfInstanceRef.current?.setViewport(lastViewportRef.current);
+                } else {
+                    rfInstanceRef.current?.fitView({ padding: 0.2 });
+                }
+            }, 80);
         };
         document.addEventListener("fullscreenchange", onFsChange);
         // @ts-ignore older Safari
@@ -231,7 +238,7 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
         return { nodesBuilt, edgesBuilt };
     }, [rawRows, query, statusFilter, selectedStages, selectedSections, selectedTags, onlyNextActionable]);
 
-    // Apply Dagre layout
+    // Apply Dagre layout, but DO NOT auto-fit view here (prevents reset on status toggles)
     useEffect(() => {
         const { nodesBuilt, edgesBuilt } = buildGraph;
         const isHorizontal = layoutDir === "LR";
@@ -269,10 +276,25 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
 
         setNodes(laidOutNodes);
         setEdges(laidOutEdges);
-
-        // Keep view tidy after any relayout
-        setTimeout(() => rfInstanceRef.current?.fitView({ padding: 0.2 }), 0);
     }, [buildGraph, layoutDir, setNodes, setEdges]);
+
+    // Only refit (or restore) when filters/layout change — not on status changes.
+    const filterFitKey = JSON.stringify({
+        layoutDir,
+        onlyNextActionable,
+        statusFilter,
+        stages: selectedStages.join("|"),
+        sections: selectedSections.join("|"),
+        tags: selectedTags.join("|"),
+        // intentionally excluding "query" so typing doesn't refit constantly
+    });
+    useEffect(() => {
+        if (lastViewportRef.current) {
+            rfInstanceRef.current?.setViewport(lastViewportRef.current);
+        } else {
+            rfInstanceRef.current?.fitView({ padding: 0.2 });
+        }
+    }, [filterFitKey]);
 
     const allStages = STAGE_ORDER;
 
@@ -424,6 +446,7 @@ export default function Flowchart({ csvUrl = "/stellaris_synth_fertility_flow.cs
                     onNodesChange={onNodesChange}
                     onEdgesChange={onEdgesChange}
                     onInit={(inst) => { rfInstanceRef.current = inst; }}
+                    onMoveEnd={(_, viewport) => { lastViewportRef.current = viewport; }}
                     fitView
                     fitViewOptions={{ padding: 0.2 }}
                 >

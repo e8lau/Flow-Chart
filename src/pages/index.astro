@@ -3,7 +3,7 @@ import Flowchart from "../components/Flowchart.tsx";
 
 // Put the CSV you downloaded into `public/stellaris_synth_fertility_flow.csv`
 // or pass a full path to csvUrl prop below.
-const csvUrl = `${import.meta.env.BASE_URL}stellaris_synth_fertility_flow.csv`;
+const csvUrl = `${import.meta.env.BASE_URL}flow.csv`;
 ---
 
 <html lang="en">
@@ -35,8 +35,11 @@ const csvUrl = `${import.meta.env.BASE_URL}stellaris_synth_fertility_flow.csv`;
             .stage-early {
                 --border: #fbd38d;
             }
-            .stage-late {
+            .stage-mid {
                 --border: #fbb6ce;
+            }
+            .stage-late {
+                --border: #000000;
             }
         </style>
     </head>

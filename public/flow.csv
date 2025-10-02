@@ -1,0 +1,88 @@
+id,depends_on,title,section,stage,description,priority,status,tags,COUNTS
+SPE-01,SPE-04,Species Trait: Intelligence,Species,Setup,"- 10% Research Efficiency
+- Improves Synthetic Fertility rush",,to-do,research,1
+SPE-02,SPE-04,Species Trait: Natural Engineers,Species,Setup,"- 15% Engineering Research Efficiency
+- Improves Synthetic Fertility rush",,to-do,research,1
+SPE-03,,Species Trait: Ingenious,Species,Setup,"- 15% Energy Production Efficiency
+- Helps stockpile energy when crash occurs due to synthetic fertility pop death.",,to-do,economy,1
+SPE-04,,Species Trait: Unruly,Species,Setup,Negative trait for research traits. No affect due to synthetic ascension,,to-do,,1
+GOV-01,,Government: Democratic,Government,Setup,10% Faction approval & 2% resource output to improve unity,,to-do,unity,1
+GOV-02,GOV-01,Government: Parliamentary System,Government,Setup,40% Faction resource output to improve unity,,to-do,unity,1
+GOV-03,GOV-05,Government: Sovereign Guardianship,Government,Setup,"- Reduced empire size due to pop for early research gain
+- Unity from soldier jobs",,to-do,"research, unity",1
+GOV-04,,Government: Fanatic Materialist,Government,Setup,20% less Robot UpKeep & 10% research,,to-do,"research, pop-growth",1
+GOV-05,,Government: Militarists,Government,Setup,10% Ship Fire Rate & required for sovereign guardianship,,to-do,,1
+MGT-01,,Arctic World Start,Planet Mgmt,Setup,Higher probability of mining districts,,to-do,economy,1
+THR-01,RES-03,RESEARCH SYNTHETICS,Threshold,Early,Focus engineering research to reach synthetic threshold faster,,to-do,research,1
+RES-04,SPE-01|SPE-02|GOV-04|GOV-03|EVE-01,Research Materials Workshop,Research,Start,"- Increases engineering jobs
+- Higher research per pop",,to-do,research,1
+EXP-01,MGT-01,Sol Start,Exploration,Setup,Most arc furnace mineral deposits,,to-do,exploration,1
+EXP-02,EXP-01,Exploration Order,Exploration,Start,Alpha Centauri ? Barnard's Star ? Sirius,,to-do,economy,1
+EXP-03,,Explore With Fleet,Exploration,Early,Find other empires to create commercial parts & form a trade league,,to-do,exploration,1
+MGT-02,,Research & Build Monument,Planet Mgmt,Early,5% unity from jobs & 0.5 unity from civilians,,to-do,unity,1
+MGT-03,MGT-02,Destroy Stronghold,Planet Mgmt,Early,Civilians now produce more unity than soldier jobs,,to-do,unity,1
+GOV-06,POL-03,Form Trade League,Government,Mid,Consumer goods & unity from trade,,to-do,"economy, unity, diplomacy",1
+MGT-04,ECO-01,Replace Archive w/ Engineering Research Specialization,Planet Mgmt,Early,Helps focus down engineering research for synthetic fertility,,to-do,research,1
+MGT-05,MGT-06,Build Engineering Research Lab,Planet Mgmt,Early,"Create one of each specialized research lab
+- More research than normal labs",,to-do,research,1
+MGT-06,MGT-04,Build Housing,Planet Mgmt,Early,More researcher jobs,,to-do,research,1
+ECO-01,,Markets,Economy,Start,"- Buy Energy to stockpile
+- Buy Minerals for districts
+- Sell food since we're losing pops",,to-do,economy,1
+ECO-02,ECO-01|SPE-03|ECO-03,Stockpile Energy,Economy,Early,"Due to synthetic fertility pop loss, we're going to experience an energy crash",,to-do,economy,1
+ECO-03,,Build Starbases,Planet Mgmt,Early,"- Build hydrobays to produce food
+- Build trade hubs in expectation of energy crash",,to-do,economy,1
+MGT-07,,Don'T Work Enforcer Jobs,Planet Mgmt,Early,Don't work enforcer jobs if crime allows to increase civilian count,,to-do,unity,1
+EXP-04,RES-01|EXP-02,Colonize Planets,Exploration,Early,Feed pops into homeworld for research,,to-do,exploration,1
+RES-01,RES-04|MGT-07|MGT-03|MGT-05,Research Artificial Workforce,Research,Early,,,to-do,research,1
+RES-02,RES-01,Research Artificial Specialists,Research,Early,,,to-do,research,1
+RES-03,RES-02,Research Artificial Administration,Research,Early,,,to-do,research,1
+MGT-08,RES-01|EXP-04,Construct Robot Assembly Plants,Planet Mgmt,Early,Helps supplement dying population,,to-do,pop-growth,1
+TRD-10,GOV-01|GOV-02|GOV-06|EVE-02|POL-02|POL-01,Open Mercantile Tree,Tradition,Early,,,to-do,economy,1
+TRD-11,TRD-10,Trickle-Up Economics,Tradition,Early,Civilians will not produce trade,,to-do,economy,1
+TRD-12,TRD-10,Marketplace Of Ideas,Tradition,Early,Increases unity production from trade,,to-do,economy,1
+TRD-20,TRD-10|POL-04,Prosperity Tree,Tradition,Early,,,to-do,economy,1
+TRD-30,TRD-20,Statecraft Tree,Tradition,Early,,,to-do,sprawl,1
+TRD-40,TRD-30,Discovery Tree,Tradition,Mid,,,to-do,research,1
+TRD-50,TRD-40,Harmony Tree,Tradition,Mid,,,to-do,sprawl,1
+TRD-60,TRD-50,Domination Tree,Tradition,Mid,,,to-do,sprawl,1
+PER-10,TRD-10,Tech First,Ascension Perk,Early,,,to-do,research,1
+PER-20,TRD-20,One Vision,Ascension Perk,Early,,,to-do,unity,1
+PER-30,TRD-30|RES-07|ECO-04,Arcology Project,Ascension Perk,Early,Ecumenopolis prerequisite,,to-do,economy,1
+PER-40,TRD-40,Cosmo Genesis,Ascension Perk,Mid,Fallen Empire building prerequisite,,to-do,pop-growth,1
+PER-50,TRD-50,Universal Transactions,Ascension Perk,Mid,Improves mercantile tradition,,to-do,economy,1
+PER-60,TRD-60,Mastery Of Nature,Ascension Perk,Mid,More districts,,to-do,economy,1
+POL-01,,Diplomatic Stance ? Isolanists,Policy,Start,10% unity boost,,to-do,unity,1
+POL-02,,Inner Focus,Policy,Early,"- 10% unity boost
+- Activate once chokepoints are established",,to-do,unity,1
+EVE-01,ECO-02,Rapid Identity Preservation,Event,Early,Research focus to focus down engineering,,to-do,research,1
+POL-03,EXP-03,Proactive First Contact,Policy,Start,,,to-do,exploration,1
+POL-04,TRD-12|THE-02,Wealth Creation ? Marketplace Of Ideas,Policy,Mid,Unity from trade,,to-do,unity,1
+EVE-02,,Habitable World Survey,Event,Early,Take the Unity,,to-do,unity,1
+THE-02,THR-01,SHIFT TO MEGA CORPS,Government,Mid,,,to-do,economy,1
+EVE-03,THR-01,Synthetic Fertility 1,Event,Mid,Improve durability ? limited ways to reduce upkeep,,to-do,economy,1
+EVE-04,EVE-03,Synthetic Fertility 2,Event,Mid,We are stronger together ? we get our pops back,,to-do,"pop-growth, economy",1
+EVE-05,EVE-04,Synthetic Fertility 3,Event,Mid,Nature got something right ? 5% resources from jobs,,to-do,"economy, research",1
+EVE-06,EVE-05,Synthetization,Event,Mid,Full Speed because alloys aren't a priority,,to-do,,1
+EVE-07,EVE-06,Digital Refactoring,Event,Mid,"- Select virtual options
+- https://stellaris.paradoxwikis.com/Digital_Refactoring
+- Only exception is Digital Bomes for more trade",,to-do,,1
+GOV-07,THE-02,Civics,Government,Mid,"1. Corporate Hedonism (hedonists create unity & pop growth)
+2. Mastercraft Inc. (consumer goods & trade from artificers)",,to-do,"economy, unity, pop-growth",1
+GOV-08,THE-02,Council,Government,Mid,"CEO, Head of Research, Minister of State, & Minister of Defense",,to-do,,1
+THR-03,MGT-08,RESEARCH PRIORITIES,Research,Mid,,,to-do,research,1
+RES-05,THR-03,Machine Template System,Research,Mid,Customize species traits,,to-do,research,1
+RES-06,THR-03,Weather Control System,Research,Mid,Anti-Gravity Engineering prerequisite,,to-do,research,1
+RES-07,RES-06,Anti-Gravity Engineering,Research,Mid,Arcology Project prerequisite,,to-do,research,1
+MGT-09,GOV-04,Build Identity Complex On Homeworld,Planet Mgmt,Mid,,,to-do,research,1
+MGT-10,THR-01|MGT-04,Replace Specialized Districts w/ Research Enclaves,Planet Mgmt,Mid,,,to-do,research,1
+ECO-04,,Buy Minerals,Economy,Mid,"Ecumenopolises require 20,000 minerals so stockpiling will be necessary",,to-do,economy,1
+MGT-11,PER-30,Fallen Empire Assembly,Planet Mgmt,Late,Specialized districts should be commercial arcologies to build fallen empire assembly buildings on homeworld,,to-do,pop-growth,1
+POL-05,EVE-06,Optimize Identity Creation,Policy,Mid,Turn on Edict to maximize pop assembly,,to-do,pop-growth,1
+POL-06,THE-02,Belligerent ? Mercantile Government,Policy,Mid,10% Trade Boost,,to-do,economy,1
+SPE-05,RES-05,Adaptive Frames,Species Mod,Mid,Overhaul amazing trait,,to-do,,1
+SPE-06,RES-05,Mass Produced,Species Mod,Mid,Pop Growth,,to-do,pop-growth,1
+POL-07,EVE-05,Identity Copies ? Identity Initialization,Policy,Mid,Increases resource output & happiness,,to-do,economy,1
+POL-08,PER-40,Materials Engineering Focus,Policy,Late,"Once we get cosmogenesis Tier 4, we get fallen empire robot assembly plants",,to-do,research,1
+RES-08,THR-03,Ascension Theory Technology,Research,Late,Prerequisite for Ambitions Edicts,,to-do,research,1
+POL-09,RES-08,Ambition: Scientific Revolution,Policy,Late,Massive Research Boost edict,,to-do,research,1
